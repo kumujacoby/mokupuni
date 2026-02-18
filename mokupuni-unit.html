@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mokupuni — 1st Grade Unit Plan</title>
+    <style>
+        :root {
+            --navy: #1E3057;
+            --royal-blue: #5480E8;
+            --white: #FFFFFF;
+            --light-gray: #F0F0F0;
+            --teal: #40816E;
+            --dark-teal: #3A5350;
+            --gold: #C79756;
+            --rust: #A64331;
+            --brown: #906841;
+            --d1: #1E3057;
+            --d2: #40816E;
+            --d3: #3A5350;
+            --d4: #A64331;
+            --d5: #C79756;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--navy);
+            min-height: 100vh;
+        }
+
+        /* ===== VIEW TOGGLE ===== */
+        .view-toggle {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--navy);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .toggle-btn {
+            padding: 7px 20px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--white);
+            color: var(--navy);
+            border-color: var(--white);
+        }
+
+        /* ===== TEACHER VIEW ===== */
+        #teacher-view { display: block; }
+        #student-view { display: none; }
+
+        header {
+            background: var(--navy);
+            color: var(--white);
+            padding: 48px 32px 40px;
+            text-align: center;
+        }
+
+        header .eyebrow {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 0.05em;
+        }
+
+        .meta-bar {
+            background: var(--dark-teal);
+            color: var(--white);
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            padding: 16px 32px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item { text-align: center; }
+
+        .meta-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .meta-value { font-size: 0.9rem; font-weight: 600; }
+
+        .overview {
+            max-width: 760px;
+            margin: 48px auto;
+            padding: 0 24px;
+        }
+
+        .overview p {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            color: var(--navy);
+            opacity: 0.85;
+        }
+
+        .day-nav {
+            max-width: 900px;
+            margin: 0 auto 32px;
+            padding: 0 24px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .day-nav a {
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--white);
+            transition: opacity 0.15s;
+        }
+
+        .day-nav a:hover { opacity: 0.8; }
+        .nav-d1 { background: var(--d1); }
+        .nav-d2 { background: var(--d2); }
+        .nav-d3 { background: var(--d3); }
+        .nav-d4 { background: var(--d4); }
+        .nav-d5 { background: var(--d5); color: var(--navy) !important; }
+
+        .days-container {
+            max-width: 900px;
+            margin: 0 auto 48px;
+            padding: 0 24px;
+            display: grid;
+            gap: 24px;
+        }
+
+        .day-card {
+            background: var(--white);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 14px rgba(30,48,87,0.09);
+        }
+
+        .day-header {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+        }
+
+        .day-sidebar {
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
+        }
+
+        .day-number {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .day-hawaiian {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1.1;
+        }
+
+        .day-english {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.65);
+            font-style: italic;
+        }
+
+        .day-title-block {
+            padding: 28px 32px;
+            border-left: 1px solid var(--light-gray);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .day-title-block h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .day-summary {
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--navy);
+            opacity: 0.75;
+        }
+
+        .day-expanded {
+            border-top: 1px solid var(--light-gray);
+            padding: 28px 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .section-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .steps-list {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .steps-list li {
+            counter-increment: steps;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--navy);
+            opacity: 0.85;
+        }
+
+        .steps-list li::before {
+            content: counter(steps);
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .tip-box {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+        }
+
+        .tip-box p {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--navy);
+            opacity: 0.8;
+        }
+
+        .tip-box strong { opacity: 1; }
+
+        .day-1 .day-sidebar { background: var(--d1); }
+        .day-1 .section-label { color: var(--d1); }
+        .day-1 .steps-list li::before { background: var(--d1); }
+
+        .day-2 .day-sidebar { background: var(--d2); }
+        .day-2 .section-label { color: var(--d2); }
+        .day-2 .steps-list li::before { background: var(--d2); }
+
+        .day-3 .day-sidebar { background: var(--d3); }
+        .day-3 .section-label { color: var(--d3); }
+        .day-3 .steps-list li::before { background: var(--d3); }
+
+        .day-4 .day-sidebar { background: var(--d4); }
+        .day-4 .section-label { color: var(--d4); }
+        .day-4 .steps-list li::before { background: var(--d4); }
+
+        .day-5 .day-sidebar { background: var(--d5); }
+        .day-5 .day-sidebar .day-hawaiian,
+        .day-5 .day-sidebar .day-number,
+        .day-5 .day-sidebar .day-english { color: var(--navy); }
+        .day-5 .section-label { color: var(--brown); }
+        .day-5 .steps-list li::before { background: var(--d5); color: var(--navy); }
+
+        .notes-section {
+            max-width: 900px;
+            margin: 0 auto 64px;
+            padding: 0 24px;
+        }
+
+        .notes-section h2 {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--navy);
+            opacity: 0.5;
+            margin-bottom: 16px;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .note-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(30,48,87,0.06);
+        }
+
+        .note-card h3 {
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .note-card p {
+            font-size: 0.9rem;
+            line-height: 1.65;
+            color: var(--navy);
+            opacity: 0.8;
+        }
+
+        /* ===== STUDENT VIEW ===== */
+        #student-view {
+            min-height: 100vh;
+        }
+
+        .slide-deck {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Day selector tabs */
+        .slide-day-tabs {
+            background: var(--navy);
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 24px;
+            flex-wrap: wrap;
+        }
+
+        .slide-day-tab {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--white);
+            background: rgba(255,255,255,0.1);
+            letter-spacing: 0.05em;
+        }
+
+        .slide-day-tab:hover { background: rgba(255,255,255,0.2); }
+        .slide-day-tab.active { color: var(--navy); background: var(--white); }
+
+        /* Slide display */
+        .slide-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px);
+            padding: 48px 32px;
+            transition: background 0.4s;
+            position: relative;
+        }
+
+        .slide-day-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .slide-hawaiian {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .slide-english {
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.65;
+            margin-bottom: 48px;
+        }
+
+        .slide-content {
+            max-width: 680px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .slide-prompt {
+            display: none;
+        }
+
+        .slide-prompt.active {
+            display: block;
+        }
+
+        .slide-prompt .prompt-text {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 24px;
+        }
+
+        .slide-prompt .prompt-sub {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.7;
+        }
+
+        /* Nav arrows */
+        .slide-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .slide-arrow {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .slide-arrow:hover { opacity: 1; }
+        .slide-arrow:disabled { opacity: 0.15; cursor: default; }
+
+        .slide-counter {
+            font-size: 0.85rem;
+            opacity: 0.5;
+            letter-spacing: 0.1em;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Stage background colors per day */
+        .stage-d1 { background: var(--d1); color: var(--white); }
+        .stage-d2 { background: var(--d2); color: var(--white); }
+        .stage-d3 { background: var(--d3); color: var(--white); }
+        .stage-d4 { background: var(--d4); color: var(--white); }
+        .stage-d5 { background: var(--d5); color: var(--navy); }
+
+        footer {
+            background: var(--navy);
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            padding: 24px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 650px) {
+            .day-header { grid-template-columns: 1fr; }
+            .day-expanded { grid-template-columns: 1fr; }
+            .notes-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 2rem; }
+            .slide-hawaiian { font-size: 3.5rem; }
+            .slide-prompt .prompt-text { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- VIEW TOGGLE -->
+<div class="view-toggle">
+    <button class="toggle-btn active" onclick="setView('teacher')">Teacher View</button>
+    <button class="toggle-btn" onclick="setView('student')">Student View</button>
+</div>
+
+<!-- ===== TEACHER VIEW ===== -->
+<div id="teacher-view">
+
+    <header>
+        <p class="eyebrow">1st Grade · Engineering & Design</p>
+        <h1>Mokupuni</h1>
+        <p class="subtitle">A Communal Island Build · 5 Sessions</p>
+    </header>
+
+    <div class="meta-bar">
+        <div class="meta-item"><span class="meta-label">Grade</span><span class="meta-value">1st Grade</span></div>
+        <div class="meta-item"><span class="meta-label">Sessions</span><span class="meta-value">5 × 30 min</span></div>
+        <div class="meta-item"><span class="meta-label">Materials</span><span class="meta-value">Knex · LEGO Minifigures</span></div>
+        <div class="meta-item"><span class="meta-label">Build Surface</span><span class="meta-value">FLL Regulation Table</span></div>
+        <div class="meta-item"><span class="meta-label">Classes</span><span class="meta-value">4 Classes · Shared Island</span></div>
+    </div>
+
+    <div class="overview">
+        <p>Four classes. One island. Built together across a quarter — without ever all being in the same room. Each class inherits the island as others left it, adding their own places and people, stewarding what came before. The Knex builds the land. The minifigures bring it to life. The conversations make it meaningful.</p>
+    </div>
+
+    <div class="day-nav">
+        <a href="#day1" class="nav-d1">Day 1 — Lāhui</a>
+        <a href="#day2" class="nav-d2">Day 2 — I Mua</a>
+        <a href="#day3" class="nav-d3">Day 3 — Hoʻomau</a>
+        <a href="#day4" class="nav-d4">Day 4 — Mālama</a>
+        <a href="#day5" class="nav-d5">Day 5 — Hoʻike</a>
+    </div>
+
+    <div class="days-container">
+
+        <!-- DAY 1 -->
+        <div class="day-card day-1" id="day1">
+            <div class="day-header">
+                <div class="day-sidebar">
+                    <span class="day-number">Day 1</span>
+                    <span class="day-hawaiian">Lāhui</span>
+                    <span class="day-english">Community / People</span>
+                </div>
+                <div class="day-title-block">
+                    <h3>We Are Community</h3>
+                    <p class="day-summary">Set the stage for the whole unit. Students learn what a mokupuni is, agree on how they will care for the shared island, and understand that other classes will be building alongside them all quarter.</p>
+                </div>
+            </div>
+            <div class="day-expanded">
+                <div>
+                    <span class="section-label">Step-by-Step</span>
+                    <ol class="steps-list">
+                        <li>Gather students together before approaching the table. Ask: "What is a mokupuni?" Let students share. Introduce the concept of an island as a place where everything is connected — the mountains, the ocean, the plants, the people.</li>
+                        <li>Reveal the FLL table and the Knex and minifigure materials. Tell students this is where their island will be built — and that it will grow every time any 1st grade class visits this room.</li>
+                        <li>Ask students: "If we are all going to build on the same island, what rules do we need?" Facilitate a short discussion and land on 3–4 agreements together. Write them large and post them at the table where they will stay all quarter.</li>
+                        <li>Close with the most important idea: other classes will build here too. Students may see things added that they didn't make. Their job is to respect and care for all of it — even the parts made by people they don't know.</li>
+                        <li>No building today. Let the anticipation build. End with: "Next time we come, the island begins."</li>
+                    </ol>
+                </div>
+                <div>
+                    <span class="section-label">Tips & Reminders</span>
+                    <div class="tip-box"><p><strong>Key question to revisit:</strong> "What does an island community need to survive and thrive?" Push beyond basic answers — food and water, yes, but also people, relationships, places to gather.</p></div>
+                    <div class="tip-box"><p><strong>Community agreements</strong> should be student language, not yours. If they say "be nice," ask them what that looks like when someone accidentally knocks something over. Get specific.</p></div>
+                    <div class="tip-box"><p><strong>No building today</strong> is intentional. The restraint creates investment. If students ask why they can't start yet, tell them Day 1 is about becoming a community before building one.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 2 -->
+        <div class="day-card day-2" id="day2">
+            <div class="day-header">
+                <div class="day-sidebar">
+                    <span class="day-number">Day 2</span>
+                    <span class="day-hawaiian">I Mua</span>
+                    <span class="day-english">Move Forward</span>
+                </div>
+                <div class="day-title-block">
+                    <h3>We Begin</h3>
+                    <p class="day-summary">First build session. Students observe what's already on the island before touching anything, then begin building their own places and choosing their minifigure.</p>
+                </div>
+            </div>
+            <div class="day-expanded">
+                <div>
+                    <span class="section-label">Step-by-Step</span>
+                    <ol class="steps-list">
+                        <li>Before students approach the table, pause them. Ask: "What do you think you might find on the island today?" Let a few students guess. Then bring them to the table.</li>
+                        <li>Give students 2–3 minutes of quiet observation. No touching yet. Ask: "What do you notice? What was left for us? What does it make you think about?" Take a few responses.</li>
+                        <li>Remind students of the community agreements posted at the table. Ask a student to read them aloud.</li>
+                        <li>Open the build. Let students choose their area and begin. Students may also choose a minifigure at this point — this becomes their person on the island.</li>
+                        <li>Circulate and ask connective questions: "What is this place?" "What happens here?" "How does your place connect to what's already there?" Avoid directing — ask and listen.</li>
+                        <li>Give a 3-minute warning before cleanup. Students place their minifigure somewhere on or near their build and step back. Close with: "The island keeps growing. Next time, something new will be here."</li>
+                    </ol>
+                </div>
+                <div>
+                    <span class="section-label">Tips & Reminders</span>
+                    <div class="tip-box"><p><strong>The observation moment is important.</strong> Don't skip it, even if students are eager to build. It builds the habit of noticing and respecting what came before.</p></div>
+                    <div class="tip-box"><p><strong>Knex is abstract by design.</strong> When a student builds something that could be anything, ask them to tell you what it is rather than guessing. Their explanation is the learning.</p></div>
+                    <div class="tip-box"><p><strong>If something gets knocked over:</strong> refer to the community agreements calmly. "What do we do when that happens?" Help them find the answer in their own rules.</p></div>
+                    <div class="tip-box"><p><strong>Minifigure choice:</strong> Students pick one figure and it stays theirs for the unit. If figures are in a bin, let students browse briefly before building starts.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 3 -->
+        <div class="day-card day-3" id="day3">
+            <div class="day-header">
+                <div class="day-sidebar">
+                    <span class="day-number">Day 3</span>
+                    <span class="day-hawaiian">Hoʻomau</span>
+                    <span class="day-english">Persevere / Continue</span>
+                </div>
+                <div class="day-title-block">
+                    <h3>We Respond</h3>
+                    <p class="day-summary">Continue building with an eye toward what others have added. A mid-session pause invites students to notice what's changed and name their minifigure's story.</p>
+                </div>
+            </div>
+            <div class="day-expanded">
+                <div>
+                    <span class="section-label">Step-by-Step</span>
+                    <ol class="steps-list">
+                        <li>Bring students to the table. Ask: "What changed since last time we were here?" Give them a moment to look carefully before answering.</li>
+                        <li>Ask: "How do you feel about what you see? Is there anything you want to take care of or add to?" Validate curiosity and even mild frustration — this is real community work.</li>
+                        <li>Remind students of agreements. Open the build.</li>
+                        <li>About halfway through, call a brief 60-second pause. Ask students to look up from their own area and notice the island as a whole. Name something interesting you see.</li>
+                        <li>Encourage students to place their minifigure and share one sentence: "My person's name is ___ and they live ___."</li>
+                        <li>Cleanup and close. Ask one student to share something they added today and why.</li>
+                    </ol>
+                </div>
+                <div>
+                    <span class="section-label">Tips & Reminders</span>
+                    <div class="tip-box"><p><strong>The mid-session pause</strong> is worth protecting. It shifts attention from "my build" to "our island." Keep it short but make it happen.</p></div>
+                    <div class="tip-box"><p><strong>If a student is upset</strong> that something they made was changed, acknowledge it genuinely. Then ask: "How could we leave a signal for the next class about what's important here?"</p></div>
+                    <div class="tip-box"><p><strong>Minifigure stories</strong> don't need to be elaborate. One sentence is enough. The goal is for each student to have a named person in a specific place.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 4 -->
+        <div class="day-card day-4" id="day4">
+            <div class="day-header">
+                <div class="day-sidebar">
+                    <span class="day-number">Day 4</span>
+                    <span class="day-hawaiian">Mālama</span>
+                    <span class="day-english">Care / Protect</span>
+                </div>
+                <div class="day-title-block">
+                    <h3>We Steward</h3>
+                    <p class="day-summary">Students shift attention from their own corner to the health of the whole island. The focus is on relationships between places — and between communities.</p>
+                </div>
+            </div>
+            <div class="day-expanded">
+                <div>
+                    <span class="section-label">Step-by-Step</span>
+                    <ol class="steps-list">
+                        <li>Opening observation. "What do you notice today? What's new? What's the same?"</li>
+                        <li>Before building, introduce today's focus: "Every part of an island needs something from another part. The mountains need rain. The fishponds need fresh water. The people need food from the land and the sea."</li>
+                        <li>Give students this prompt before they build: "What does your place need from another place on the island?" Let it sit as they work.</li>
+                        <li>Circulate with connective questions: "Who lives near you?" "What do they share?" "If something happened to your place, what else would be affected?"</li>
+                        <li>Begin planting the seed for Day 5: "If you had to explain your place to someone who has never seen it, what would you say?"</li>
+                        <li>Cleanup and close. Ask the group: "What is one thing you want to make sure is still here on our last day?"</li>
+                    </ol>
+                </div>
+                <div>
+                    <span class="section-label">Tips & Reminders</span>
+                    <div class="tip-box"><p><strong>Mālama means to care for.</strong> If the moment feels right, use the word with students. "You're mālama-ing the island right now."</p></div>
+                    <div class="tip-box"><p><strong>Relationships between places</strong> is the big idea today. Push students to think beyond their own build. "Look around. What's near your place? What do those people share with yours?"</p></div>
+                    <div class="tip-box"><p><strong>Day 5 prep:</strong> Planting the seed today ("what will you share next time?") makes the Hoʻike session run much more smoothly.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 5 -->
+        <div class="day-card day-5" id="day5">
+            <div class="day-header">
+                <div class="day-sidebar">
+                    <span class="day-number">Day 5</span>
+                    <span class="day-hawaiian">Hoʻike</span>
+                    <span class="day-english">To Show / Demonstrate</span>
+                </div>
+                <div class="day-title-block">
+                    <h3>We Share</h3>
+                    <p class="day-summary">No new building. Students share the story of their place and their person, then step back to reflect on the whole island — including the parts they didn't make.</p>
+                </div>
+            </div>
+            <div class="day-expanded">
+                <div>
+                    <span class="section-label">Step-by-Step</span>
+                    <ol class="steps-list">
+                        <li>Gather students at the table. Tell them: "Today we're not building. Today we're sharing." Let that land.</li>
+                        <li>Each student finds their minifigure and shares: their person's name, where they live on the island, and one thing their person does or needs.</li>
+                        <li>After everyone has shared, zoom out. Ask: "What do you see that you didn't make?" "What surprised you?" "What's something another class built that you think is really interesting?"</li>
+                        <li>Name the big idea: "Some of this island was made by students in other classes who are never in this room with you. You built alongside people you've never met. That's what it means to share a place. That's what it means to be lāhui."</li>
+                        <li>Optional closing: ask students what they would want the next class to know about their part of the island.</li>
+                    </ol>
+                </div>
+                <div>
+                    <span class="section-label">Tips & Reminders</span>
+                    <div class="tip-box"><p><strong>Keep sharing low-stakes.</strong> Holding up a minifigure and saying a few sentences is enough. The goal is voice, not performance.</p></div>
+                    <div class="tip-box"><p><strong>The "parts I didn't make" moment</strong> is the most important part of Day 5. Don't rush past it. Let students sit with the wonder of a world they helped build but don't fully understand.</p></div>
+                    <div class="tip-box"><p><strong>Lāhui</strong> — bring it back to the word from Day 1. "We started by talking about lāhui. Look at what lāhui built."</p></div>
+                    <div class="tip-box"><p><strong>The island stays up</strong> between sessions. Handle the table and materials with care so other classes can still experience their Hoʻike.</p></div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end days-container -->
+
+    <div class="notes-section">
+        <h2>Facilitation Notes</h2>
+        <div class="notes-grid">
+            <div class="note-card">
+                <h3>On the Shared Island</h3>
+                <p>Students will encounter choices made by other classes without context. Resist the urge to explain. Let them sit with not knowing — and honor it anyway. This is the most important lesson of the unit.</p>
+            </div>
+            <div class="note-card">
+                <h3>On Knex + Minifigures</h3>
+                <p>Knex builds the landforms at scale, quickly. Minifigures anchor the human story. Because Knex is abstract, students must explain what their structures represent — that explanatory moment is where the learning lives.</p>
+            </div>
+            <div class="note-card">
+                <h3>On Accidental Destruction</h3>
+                <p>It will happen. Have a clear, non-punitive norm from Day 1: if you knock something down, you help fix it. Frame it as part of being a good community member, not a disciplinary moment.</p>
+            </div>
+            <div class="note-card">
+                <h3>On the First Builder</h3>
+                <p>The first class in each cycle sets the tone everyone else responds to. Over time you can name it: "You're building first this week. What will you leave for the next community?"</p>
+            </div>
+            <div class="note-card">
+                <h3>On ʻŌlelo Hawaiʻi</h3>
+                <p>The day titles are the primary language touchpoints. Use them naturally — say the word, say what it means, move on. The goal is for the words to feel like they belong here, because they do.</p>
+            </div>
+            <div class="note-card">
+                <h3>On Transitions</h3>
+                <p>30 minutes goes fast. Protect the opening observation moment every session. Aim for 3 minutes of looking, 20 minutes of building, 5 minutes of cleanup and close.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>Engineering & Design · E Ola! · Quarter Plan</footer>
+
+</div><!-- end teacher-view -->
+
+
+<!-- ===== STUDENT VIEW ===== -->
+<div id="student-view">
+
+    <div class="slide-deck">
+        <div class="slide-day-tabs">
+            <button class="slide-day-tab active" onclick="goToDay(1)">Day 1 · Lāhui</button>
+            <button class="slide-day-tab" onclick="goToDay(2)">Day 2 · I Mua</button>
+            <button class="slide-day-tab" onclick="goToDay(3)">Day 3 · Hoʻomau</button>
+            <button class="slide-day-tab" onclick="goToDay(4)">Day 4 · Mālama</button>
+            <button class="slide-day-tab" onclick="goToDay(5)">Day 5 · Hoʻike</button>
+        </div>
+
+        <div class="slide-stage stage-d1" id="slide-stage">
+            <div class="slide-day-label" id="slide-day-label">Day 1</div>
+            <div class="slide-hawaiian" id="slide-hawaiian">Lāhui</div>
+            <div class="slide-english" id="slide-english">Community / People</div>
+
+            <div class="slide-content" id="slide-content">
+                <!-- prompts injected by JS -->
+            </div>
+
+            <div class="slide-nav">
+                <button class="slide-arrow" id="btn-prev" onclick="changeSlide(-1)">←</button>
+                <span class="slide-counter" id="slide-counter">1 / 4</span>
+                <button class="slide-arrow" id="btn-next" onclick="changeSlide(1)">→</button>
+            </div>
+        </div>
+    </div>
+
+</div><!-- end student-view -->
+
+<script>
+    // ===== VIEW TOGGLE =====
+    function setView(view) {
+        document.getElementById('teacher-view').style.display = view === 'teacher' ? 'block' : 'none';
+        document.getElementById('student-view').style.display = view === 'student' ? 'block' : 'none';
+        document.querySelectorAll('.toggle-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', (view === 'teacher' && i === 0) || (view === 'student' && i === 1));
+        });
+        if (view === 'student') renderSlide();
+    }
+
+    // ===== SLIDE DATA =====
+    const days = [
+        {
+            number: 1,
+            hawaiian: 'Lāhui',
+            english: 'Community / People',
+            stageClass: 'stage-d1',
+            prompts: [
+                {
+                    text: 'What is a mokupuni?',
+                    sub: 'Think about what you know. What makes an island special? What does an island need?'
+                },
+                {
+                    text: 'What does a community need to survive and thrive?',
+                    sub: 'Think beyond food and water. What do people need from each other?'
+                },
+                {
+                    text: 'If we all share this island, what rules do we need?',
+                    sub: 'This island belongs to every 1st grade class. How do we take care of something we share?'
+                },
+                {
+                    text: 'Other classes will build here too.',
+                    sub: 'You might see things you didn\'t make. Your job is to respect and care for all of it — even the parts made by people you\'ve never met.'
+                }
+            ]
+        },
+        {
+            number: 2,
+            hawaiian: 'I Mua',
+            english: 'Move Forward',
+            stageClass: 'stage-d2',
+            prompts: [
+                {
+                    text: 'What do you think you\'ll find on the island today?',
+                    sub: 'Look carefully before you touch anything. What has been left for us?'
+                },
+                {
+                    text: 'What do you notice? What was left for us?',
+                    sub: 'Take a moment. Look at the whole island. Someone has already been here.'
+                },
+                {
+                    text: 'Choose your place. Choose your person.',
+                    sub: 'Find where you want to build on the island. Pick a minifigure — this is your person. They live here now.'
+                },
+                {
+                    text: 'What is this place? What happens here?',
+                    sub: 'Build your part of the island. What does your place offer the whole community?'
+                },
+                {
+                    text: 'Place your person. The island keeps growing.',
+                    sub: 'Set your minifigure near your build before we clean up. Next time you come back, something new will be here.'
+                }
+            ]
+        },
+        {
+            number: 3,
+            hawaiian: 'Hoʻomau',
+            english: 'Persevere / Continue',
+            stageClass: 'stage-d3',
+            prompts: [
+                {
+                    text: 'What changed since last time?',
+                    sub: 'Look carefully. Who was here? What did they add? What do you notice that\'s new?'
+                },
+                {
+                    text: 'How do you feel about what you see?',
+                    sub: 'Is there something you want to take care of? Something you want to add to? Something that surprised you?'
+                },
+                {
+                    text: 'Keep building. Hoʻomau.',
+                    sub: 'Continue growing your part of the island. Remember the agreements posted at the table.'
+                },
+                {
+                    text: 'Look up. Look at the whole island.',
+                    sub: 'Step back for a moment. Notice something that someone else built. What do you think that place is?'
+                },
+                {
+                    text: 'Tell us about your person.',
+                    sub: 'Place your minifigure and share one sentence: "My person\'s name is ___ and they live ___."'
+                }
+            ]
+        },
+        {
+            number: 4,
+            hawaiian: 'Mālama',
+            english: 'Care / Protect',
+            stageClass: 'stage-d4',
+            prompts: [
+                {
+                    text: 'What do you notice today?',
+                    sub: 'What\'s new? What\'s the same? What has been cared for?'
+                },
+                {
+                    text: 'Every part of an island needs something from another part.',
+                    sub: 'The mountains need rain. The fishponds need fresh water. The people need food from the land and the sea. Nothing survives alone.'
+                },
+                {
+                    text: 'What does your place need from another place on the island?',
+                    sub: 'Think about this as you build today. You don\'t need to answer out loud — just let it guide you.'
+                },
+                {
+                    text: 'Who lives near you? What do you share?',
+                    sub: 'Look around the island. How does your place connect to the places nearby? What would happen if yours disappeared?'
+                },
+                {
+                    text: 'If you had to explain your place to someone who has never seen it, what would you say?',
+                    sub: 'Start thinking about this. Next time is Hoʻike — your chance to share.'
+                }
+            ]
+        },
+        {
+            number: 5,
+            hawaiian: 'Hoʻike',
+            english: 'To Show / Demonstrate',
+            stageClass: 'stage-d5',
+            prompts: [
+                {
+                    text: 'Today we are not building.',
+                    sub: 'Today we share. Find your minifigure and stand near your place on the island.'
+                },
+                {
+                    text: 'Tell us about your person and your place.',
+                    sub: 'Share your person\'s name, where they live on the island, and one thing they do or need.'
+                },
+                {
+                    text: 'What do you see that you didn\'t make?',
+                    sub: 'Look at the whole island. What surprises you? What did another class build that you find interesting?'
+                },
+                {
+                    text: 'You built alongside people you\'ve never met.',
+                    sub: 'Some of this island was made by students in other classes who are never in this room with you. That is what it means to share a place.'
+                },
+                {
+                    text: 'This is what Lāhui built.',
+                    sub: 'Community. People. One island. Made together.'
+                }
+            ]
+        }
+    ];
+
+    let currentDay = 0;
+    let currentSlide = 0;
+
+    function goToDay(dayNum) {
+        currentDay = dayNum - 1;
+        currentSlide = 0;
+        document.querySelectorAll('.slide-day-tab').forEach((tab, i) => {
+            tab.classList.toggle('active', i === currentDay);
+        });
+        renderSlide();
+    }
+
+    function changeSlide(dir) {
+        const prompts = days[currentDay].prompts;
+        currentSlide = Math.max(0, Math.min(prompts.length - 1, currentSlide + dir));
+        renderSlide();
+    }
+
+    function renderSlide() {
+        const day = days[currentDay];
+        const prompts = day.prompts;
+        const prompt = prompts[currentSlide];
+
+        const stage = document.getElementById('slide-stage');
+        stage.className = 'slide-stage ' + day.stageClass;
+
+        document.getElementById('slide-day-label').textContent = 'Day ' + day.number;
+        document.getElementById('slide-hawaiian').textContent = day.hawaiian;
+        document.getElementById('slide-english').textContent = day.english;
+
+        document.getElementById('slide-content').innerHTML = `
+            <div class="slide-prompt active">
+                <p class="prompt-text">${prompt.text}</p>
+                <p class="prompt-sub">${prompt.sub}</p>
+            </div>
+        `;
+
+        document.getElementById('slide-counter').textContent = (currentSlide + 1) + ' / ' + prompts.length;
+        document.getElementById('btn-prev').disabled = currentSlide === 0;
+        document.getElementById('btn-next').disabled = currentSlide === prompts.length - 1;
+    }
+
+    // keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (document.getElementById('student-view').style.display !== 'none') {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+        }
+    });
+
+    renderSlide();
+</script>
+</body>
+</html>
